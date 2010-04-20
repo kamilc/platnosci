@@ -1,0 +1,2 @@
+module PlatnosciHelper
+end

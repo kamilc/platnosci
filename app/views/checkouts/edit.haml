@@ -1,0 +1,8 @@
+- content_for :head do
+	= javascript_include_tag 'checkout', '/states'
+
+#checkout
+	%h1= t("checkout")
+	- form_for @checkout, :url => object_url, :html => { :method => :put, :id => 'checkout_form'} do |checkout_form|
+		= render 'form', :checkout_form => checkout_form
+		%input{ :id => "post-final", :type => "submit", :style => "display:none" }

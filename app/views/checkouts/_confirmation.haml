@@ -1,0 +1,15 @@
+%h2= t("confirm")
+.inner
+	%input#final_answer{ :name => "final_answer", :type => "hidden" }
+	#bdisplay
+		%h3= t("billing_address")
+		%div
+			%img{ :src => "/images/ajax_loader.gif", :id => "bconfirm_loader" }
+	#sdisplay
+		%h3= t("shipping_address")
+		%div
+			%img{ :src => "/images/ajax_loader.gif", :id => "sconfirm_loader" }
+	.clear
+	= render :partial => 'shared/order_details', :locals => {:order => @order}
+	.form-buttons
+		= submit_tag "Zlóż zamówienie", {:id => "continue_confirmation", :class => "button primary"}

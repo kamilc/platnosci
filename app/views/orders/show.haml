@@ -1,0 +1,39 @@
+#order
+	= link_to t('back_to_store'), products_path
+
+	- if params.has_key? :checkout_complete
+		%br/
+		%br/
+		%h3= t('thank_you_for_your_order')
+		- if Spree::Config[:google_analytics_id] and not %w{development test}.include? RAILS_ENV
+			= render :partial => "orders/google_order", :locals => {:order => @order}
+	- else
+		= link_to t('my_account'), user_path(current_user) if current_user
+	%br/
+	%br/
+
+	= render :partial => 'shared/order_details', :locals => {:order => @order}
+	
+	#info-platnosci
+		Kliknij poniższy przycisk aby przejść do serwisu platność.pl aby oplacić powyższe zamówienie.
+		%b Tylko i wylącznie oplacone zamóweinia przekazywane są do realizacji.
+
+	%br/
+	- form_tag "https://www.platnosci.pl/paygw/UTF/NewPayment", :method => :post, :name => 'platnosci_form' do
+		= hidden_field_tag 'first_name', @order.bill_address.firstname
+		= hidden_field_tag 'last_name', @order.bill_address.lastname
+		= hidden_field_tag 'email',  @order.user.nil? ? @order.email : @order.user.email
+		= hidden_field_tag 'pos_id', Spree::Config[:pos_id]
+		= hidden_field_tag 'pos_auth_key', Spree::Config[:pos_auth_key]
+		= hidden_field_tag 'session_id', @order.id
+		= hidden_field_tag 'amount', @order.total * 100
+		= hidden_field_tag 'desc', "Zamówienie nr. #{@order.number} w sklepie internetowym felgi-sklep.pl"
+		= hidden_field_tag 'client_ip', request.remote_ip.to_s
+		= hidden_field_tag 'js', '0'
+		= submit_tag "Przejdź do Platnosci.pl", { :class => "button primary" }
+	
+	%br/
+	= link_to "Wysylka za pobraniem", { :controller => "orders", :action => "pobranie", :id => @order.number }, :class => "button primary"
+		
+	%script{ :language => 'javascript', :type => 'text/javascript' }
+		= "document.forms['platnosci_form'].js.value=1;"

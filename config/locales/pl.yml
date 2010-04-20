@@ -1,0 +1,5 @@
+pl:
+    activerecord:
+        attributes:
+            order:
+                platnosci_status: "Status w platności.pl"

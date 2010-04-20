@@ -1,0 +1,17 @@
+%h1= t(:order) + " #{@order.number}"
+
+- content_for :sidebar do
+
+	%h3.name= t(:order) + " ##{@order.number} (#{t(@order.state, :default => @order.state.titleize)})"
+	%br{ :clear => "clear" }
+
+	%ul.sidebar
+		%li{ :class => "#{'active' if current == 'Order Details'}" }
+			= link_to t("order_details"), admin_order_url(@order)
+		/%li{ :class => "#{'active' if current == 'Payments'}" }
+		/	= link_to t("payments"), admin_order_payments_url(@order)
+			
+		- if @order_admin_tabs && @order_admin_tabs.size > 0
+			- @order_admin_tabs.each do |extension|
+				%li{ :class => "#{'active' if current == extension[:name].titleize.pluralize}" }
+					= link_to t(extension[:name], :default => extension[:name].titleize.pluralize), eval(extension[:url] + " @order")
